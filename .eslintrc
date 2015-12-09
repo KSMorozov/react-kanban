@@ -1,9 +1,26 @@
 {
 	"ecmaFeatures": {
-			"classes" : true,
-			"arrowFunctions" : true,
-			"modules" : true,
-    	    "blockBindings": true,
-    	    "jsx": true
-    	}
+		"arrowFunctions": true,
+		"blockBindings": true,
+		"classes": true,
+		"defaultParams": true,
+		"destructuring": true,
+		"forOf": true,
+		"generators": false,
+		"modules": true,
+		"objectLiteralComputedProperties": true,
+		"objectLiteralDuplicateProperties": true,
+		"objectLiteralShorthandMethods": true,
+		"objectLiteralShorthandProperties": true,
+		"restParams": true,
+		"spread": true,
+		"superInFunctions": true,
+		"templateStrings": true,
+		"jsx": true,
+		"experimentalObjectRestSpread"
+	},
+	"parser": "babel-eslint",
+	"plugins": [
+		"react"
+	]
 }
