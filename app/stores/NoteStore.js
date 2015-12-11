@@ -7,6 +7,10 @@ class NoteStore {
 		this.bindActions(NoteActions);
 
 		this.notes = [];
+
+		this.exportPublicMethods({
+			get: this.get.bind(this)
+		});
 	}
 	create(note) {
 		const notes = this.notes;
@@ -42,6 +46,9 @@ class NoteStore {
 
 		if (n_id < 0) return;
 		return n_id;
+	}
+	get(ids = []) {
+		return ids.map((id) => this.notes[this.findNote(id)]).filter((a) => a);
 	}
 }
 

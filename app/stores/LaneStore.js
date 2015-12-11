@@ -19,6 +19,22 @@ class LaneStore {
       lanes: lanes.concat(lane)
     });
   }
+  update({id, name}) {
+    const lanes = this.lanes.map((lane) => {
+      if(lane.id === id) {
+        lane.name = name;
+      }
+
+      return lane;
+    });
+
+    this.setState({lanes});
+  }
+  delete(id) {
+    this.setState({
+      lanes: this.lanes.filter((lane) => lane.id !== id)
+    });
+  }
   attachToLane({laneId, noteId}) {
     if(!noteId) {
       this.waitFor(NoteStore);
@@ -26,49 +42,31 @@ class LaneStore {
       noteId = NoteStore.getState().notes.slice(-1)[0].id;
     }
 
-    const lanes = this.lanes;
-    const targetId = this.findLane(laneId);
-
-    if (targetId < 0) return ;
-
-    const lane = lanes[targetId];
-
-    if (lane.notes.indexOf(noteId) === -1) {
-      lanes.notes.push(noteId);
-
-      this.setState({lanes});
-    }
-    else {
-      console.warn('Already attached note to lane', lanes);
-    }
+    const lanes = this.lanes.map((lane) => {
+      if(lane.id === laneId) {
+        if(lane.notes.indexOf(noteId) === -1) {
+          lane.notes.push(noteId);
+        } else {
+          console.warn('Already attached note to lane', lanes);
+        }
+      }
+      return lane;
+    });
+    this.setState({lanes});
   }
   detachFromLane({laneId, noteId}) {
-    const lanes = this.lanes;
-    const targetId = this.findLane(laneId);
+    const lanes = this.lanes.map((lane) => {
+      if(lane.id === laneId) {
+        const notes = lane.notes;
+        const removeIndex = notes.indexOf(noteId);
 
-    if (targetId < 0) return ;
+        if(removeIndex !== -1) lane.notes = notes.filter((note) => note.id !== removeIndex);
+        else console.warn('Failed to remove note from a lane as it didnt exist', lanes);
+      }
+      return lane;
+    });
 
-    const lane = lanes[targetId];
-    const notes = lane.notes;
-    const removeIndex = notes.indexOf(noteId);
-
-    if (removeIndex !== -1) {
-      lanes.notes = notes.slice(0, removeIndex)
-        .concat(notes.slice(removeIndex + 1));
-
-      this.setState({lanes});
-    }
-    else {
-      console.warn('Failed to remove note from a lane as it didn\'t exist', lanes);
-    }
-  }
-  findLane(id) {
-    const lanes = this.lanes;
-    const laneIndex = lanes.findIndex((lane) => lane.id === id);
-
-    if (laneIndex < 0) console.warn('Failed to find lane', lanes, id);
-
-    return laneIndex;
+    this.setState({lanes});
   }
 }
 
